@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OMR Helper</string>
+    <string name="camera_activity_permission_denied_toast">Please go to app settings and grant camera permission</string>
+    <!--<string name="finding_rect">I can\'t see a sheet</string>-->
+    <string name="finding_rect">Mujhe Sheet Dikhao!</string>
+    <string name="place_sheet">Point to a sheet</string>
+    <string name="move_away">Move away</string>
+    <string name="move_closer">Move closer</string>
+    <string name="adjust_angle">Adjust angle</string>
+    <string name="error_rect">Something is wrong.</string>
+    <string name="hold_still">Hold still</string>
+    <string name="find_marker">Looking for markers</string>
+    <string name="capturing">Oye Balle Balle!</string>
+    <!--<string name="capturing">Capturing Image</string>-->
+    <string name="timer_text">(%1$d s)</string>
+
+    <!--Button labels-->
+    <string name="flash">Flash</string>
+    <string name="xray">XRay</string>
+    <string name="canny_on">Canny</string>
+    <string name="morph_on">Morph</string>
+    <!--<string name="thresh_on">Thresh</string>-->
+    <string name="hover_on">Hover</string>
+    <string name="contour_on">Contour</string>
+    <string name="clahe_on">Clahe</string>
+    <string name="gamma_on">Gamma</string>
+    <string name="normal">Off</string>
+    <string name="storage_btn">Storage</string>
+    <string name="storage_folder">Storage Path Prefix</string>
+    <string name="storage_hint">Suffix \'_%1$d.jpg\' will be added automatically</string>
+    <string name="storage_invalid">Invalid Path!</string>
+
+    <!--Debug menu config in values/string.xml -->
+    <string name="v_ksize_blur">3</string>
+    <string name="v_ksize_morph">10</string>
+    <string name="v_canny_l">30</string>
+    <string name="v_canny_u">150</string>
+    <string name="v_gamma">125</string>
+    <string name="v_marker_scale">100</string>
+    <string name="v_trunc_thresh">235</string>
+    <!-- Most useful: zero thresh-->
+    <string name="v_zero_thresh">190</string>
+    <string name="v_autocap_timer">4</string>
+
+    <!--Slider labels-->
+    <string name="autocap_timer">Timer</string>
+    <string name="gamma">Gamma</string>
+    <string name="marker_scale">MScale</string>
+    <string name="trunc_thresh">Truncate</string>
+    <string name="ksize_blur">BlurK</string>
+    <string name="ksize_morph">MorphK</string>
+    <string name="canny_l">Canny L</string>
+    <string name="canny_u">Canny U</string>
+    <string name="zero_thresh">Thresh-Z</string>
+
+    <string name="support_text">Show some Love &amp; Support for this ad-free app!</string>
+    <string name="signature">Designed &amp; Developed By : Udayraj</string>
+    <string name="developer_line1">Made with♥</string>
+    <string name="developer_line2">by <a href="https://github.com/Udayraj123/">Udayraj</a></string>
+    <string name="developer_line3">If you liked it, Give a star on github!</string>
+    <string name="developer_line4"><a href="https://github.com/Udayraj123/AndroidOMRHelper">View on Github</a></string>
+</resources>

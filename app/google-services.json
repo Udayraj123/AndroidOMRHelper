@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "533108933159",
+    "firebase_url": "https://crashtest-2f752.firebaseio.com",
+    "project_id": "crashtest-2f752",
+    "storage_bucket": "crashtest-2f752.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533108933159:android:31ba707fe93894d6",
+        "android_client_info": {
+          "package_name": "com.udayraj.omrhelper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533108933159-diqtpag8v2mrvhhejicmhp99n18mj4pe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAG_-BHFz0z39hUqOazI2SB2YpVF5RDYq0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533108933159-diqtpag8v2mrvhhejicmhp99n18mj4pe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

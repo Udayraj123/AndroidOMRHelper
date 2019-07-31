@@ -1,0 +1,67 @@
+TODO
+UI changes -
+    // No need of dragging of points
+    // Preview shall not pause and show enhanced crop.
+    // cropLayout be visible for 2 seconds : if X is clicked, image is not saved.
+    // Implement and Display timer
+    change to showing circles instead of page outline / do both
+    Name of saving Folder be shown above preview screen
+    cancel button should show right when "hold still" is displayed. Picture be saved via a thread to save time (overwrite if ctr not incremented).
+
+Code-only changes -
+    Debug findLargestContour dont work on light backgrounds
+        //-> Less Preprocessing - only gray-n-threshold! No canny, They not morphing the image beforehand!
+        // **** -> (XRAY Button) Make a debug view to see intermediate bitmaps!
+                Nope, it only overlays! -  onPictureClicked is the place
+                    -> everything is drawn over scanCanvasView _//
+    // Debug when adjust angle is shown: its based on maxCosine - seems good when tuned.
+    // change onPictureClicked
+    add matchTemplate
+
+
+**** : You can have the app show all these effects to get more "familiar" with them.
+//--> canny output
+//--> morph output
+//--> thresh output
+--> template matching output
+
+just4fun :
+-> morph close on raw input
+-> histogram on raw input
+
+9 Apr:
+**Current code works on emulator; but fails on device! Gave a lot of time to debug Xray, it is not primarily required on phone anyway. Now giving a last try before moving on.
+Bitmap is too costly! Need to change it.
+// Bitmap bitmap = ScanUtils.decodeBitmapFromByteArray(data..
+We convert anyway into Mat later. lets have a mat first then.
+
+
+31 July:
+Major TODOs in phone
+
+//add crashlytics and splashy
+    >release for crash data
+
+Options
+M1 - Continue debugging with changing versions and syncing and building
+    > Least extra code, but Most debugging req
+    > Infeasible given time
+
+Removing module concept may resolve crashlytics err
+
+M2 - Fork VehicleInfo and add opencv to it
+    > Crashlytics will definitely work
+    > Existing issues will regress
+
+M3 - Setup new OpenCV project and add crashlytics to it
+    > More time than M2
+    > Crashlytics may still not work
+    > The existing issues may or may not regress
+
+_// M3' - Setup Crashlytics project and opencv to it
+    > Most reliable as well as time taking
+    > Crashlytics will definitely work
+    > The existing issues may or may not regress
+    > Just make note of OpenCV source changes.
+
+Adding opencv>> Copying folder should do?

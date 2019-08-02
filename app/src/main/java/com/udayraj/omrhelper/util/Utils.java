@@ -282,7 +282,7 @@ public class Utils {
     //     Imgproc.threshold(processedMat, processedMat, SC.CANNY_THRESH, 255, Imgproc.THRESH_BINARY + Imgproc.THRESH_OTSU);
     // }
         public static void canny(Mat processedMat) {
-            Imgproc.Canny(processedMat, processedMat, SC.CANNY_THRESHOLD_U, SC.CANNY_THRESHOLD_L);
+            Imgproc.Canny(processedMat, processedMat, SC.CANNY_THRESHOLD_U, SC.CANNY_THRESHOLD_L, 3, false);
         // threshBinary(processedMat);
         }
         private static Mat morph_kernel = new Mat(new Size(SC.KSIZE_CLOSE, SC.KSIZE_CLOSE), CvType.CV_8UC1, new Scalar(255));
@@ -338,6 +338,28 @@ public class Utils {
             matchOut.release();
             return ret;
         }
+    /**
+     * Rotate an image by an angle (counterclockwise)
+     *
+     * @param image Transform matrix
+     * @param angle Angle to rotate by (counterclockwise) from -360 to 360
+     */
+    public static void rotate(Mat image, double angle) {
+        //Calculate size of new matrix
+        double radians = Math.toRadians(angle);
+        double sin = Math.abs(Math.sin(radians));
+        double cos = Math.abs(Math.cos(radians));
+
+        int newWidth = (int) (image.width() * cos + image.height() * sin);
+        int newHeight = (int) (image.width() * sin + image.height() * cos);
+
+        // rotating image
+        Point center = new Point(newWidth / 2, newHeight / 2);
+        Mat rotMatrix = Imgproc.getRotationMatrix2D(center, angle, 1.0); //1.0 means 100 % scale
+
+        Size size = new Size(newWidth, newHeight);
+        Imgproc.warpAffine(image, image, rotMatrix, image.size());
+    }
         public static List<Point> findMarkers(Mat warpLevel1) {
             Mat warpErodedSub;
             Mat marker;
@@ -400,17 +422,22 @@ public class Utils {
                 Imgproc.rectangle(warpLevel1, matchLoc, new Point(matchLoc.x + marker_best.cols(), matchLoc.y + marker_best.rows()), new Scalar(5, 5, 5), 4);
             }
         }
-        Core.rotate(warpLevel1,warpLevel1, Core.ROTATE_90_CLOCKWISE); //ROTATE_180 or ROTATE_90_COUNTERCLOCKWISE
+        rotate(warpLevel1,270);
+//        Core.rotate(warpLevel1,warpLevel1, Core.ROTATE_90_CLOCKWISE); //ROTATE_180 or ROTATE_90_COUNTERCLOCKWISE
         Imgproc.rectangle(warpLevel1, new Point(midw-10,h1/2-20), new Point(midw+150,h1/2), new Scalar(225, 225, 225), -1);
 
         Imgproc.putText(warpLevel1, "Match: "+ (int)(allMax.second*100)+ "%",
             new Point(midw,h1/2),
             Core.FONT_HERSHEY_SIMPLEX, 0.75, new Scalar(50,50,50), 2);
-        Core.rotate(warpLevel1,warpLevel1, Core.ROTATE_90_COUNTERCLOCKWISE); //ROTATE_180 or ROTATE_90_COUNTERCLOCKWISE
-
+//        Core.rotate(warpLevel1,warpLevel1, Core.ROTATE_90_COUNTERCLOCKWISE); //ROTATE_180 or ROTATE_90_COUNTERCLOCKWISE
+        rotate(warpLevel1,90);
         marker_best.release();
-
-        return points;
+        if(allMax.second * 100 < SC.MATCH_PERCENT){
+            return new ArrayList<>();
+        }
+        else {
+            return points;
+        }
     }
     public static Mat four_point_transform_scaled(Mat outMat, int inCols,int inRows, Point[] points) {
         float scaleW = outMat.cols()/(float)inCols;

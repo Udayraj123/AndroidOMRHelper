@@ -43,11 +43,8 @@ import com.udayraj.omrhelper.view.Quadrilateral;
 import com.udayraj.omrhelper.view.ScanCanvasView;
 import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
-import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.JavaCameraView;
-import org.opencv.android.LoaderCallbackInterface;
-import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Size;
@@ -66,11 +63,13 @@ public class MainActivity extends AppCompatActivity implements IScanner, CameraB
     private static final String mOpenCvLibrary = "opencv_java3";
     static {
         System.loadLibrary(mOpenCvLibrary);
+//        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
     private static final String TAG = "MainActivity";
     private Resources res;
-    private Bitmap copyBitmap;
+    private Bitmap tempBitmap;
+    private Mat outMat;
     private Mat saveOutMat;
     private int saveRows, saveCols;
     private Point[] savePoints;
@@ -95,8 +94,7 @@ public class MainActivity extends AppCompatActivity implements IScanner, CameraB
     private int secondsLeft;
     private boolean isCapturing = false;
 
-    private Mat outMat;
-
+    private Button storage_btn;
     private FirebaseAnalytics mFirebaseAnalytics;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements IScanner, CameraB
 
         FirebaseApp.initializeApp(this);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+//        TODO: verify this comes into the analytics portal
         new Handler().post(new Runnable() {
             @Override
             public void run() {
@@ -128,6 +127,17 @@ public class MainActivity extends AppCompatActivity implements IScanner, CameraB
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
             }
         });
+
+        // Crashlytics.setUserIdentifier("user123456789");
+
+//                Bundle params = new Bundle();
+//                params.putString("image_name", "some name");
+//                params.putString("full_path", "File path with counter");
+//                mFirebaseAnalytics.logEvent("save_image", params);
+//                Crashlytics.getInstance().crash();
+//                return false;
+
+
         setContentView(R.layout.activity_main);
 
         res = getResources();
@@ -137,8 +147,9 @@ public class MainActivity extends AppCompatActivity implements IScanner, CameraB
         cameraPreviewLayout = findViewById(R.id.camera_preview);
         mOpenCvCameraView = findViewById(R.id.java_camera_view);
         // Not much change in FPS! cool! : 1072x1072
-        // mOpenCvCameraView.setMaxFrameSize(3000, 3000);
-        mOpenCvCameraView.enableFpsMeter();
+        // to ensure highest frame in all phones TODO: Tell to check the toast
+        mOpenCvCameraView.setMaxFrameSize(3000, 3000);
+//        mOpenCvCameraView.enableFpsMeter();
         // custom implemented feature - https://stackoverflow.com/questions/16669779/opencv-camera-orientation-issue
         // mOpenCvCameraView.setUserRotation(90);
         captureHintLayout = findViewById(R.id.capture_hint_layout);
@@ -155,18 +166,20 @@ public class MainActivity extends AppCompatActivity implements IScanner, CameraB
                 v.setClickable(false);
                 Log.d("custom"+TAG, "Image Accepted.");
                 // Done: check existing IMAGE_CTR there
-                FileUtils.checkMakeDirs(SC.CURR_FOLDER);
-                SC.IMAGE_CTR = new File(SC.CURR_FOLDER).listFiles(SC.jpgFilter).length + 1;
-                final String IMAGE_NAME = SC.IMAGE_PREFIX + "_" +SC.IMAGE_CTR+".jpg";
+                FileUtils.checkMakeDirs(SC.CURR_DIR);
+                FileUtils.checkMakeDirs(SC.CURR_ORIG_DIR);
+                SC.IMAGE_CTR = new File(SC.CURR_DIR).listFiles(SC.jpgFilter).length + 1;
+                final String IMAGE_NAME = SC.IMAGE_PREFIX +SC.IMAGE_CTR+".jpg";
                 Toast.makeText(MainActivity.this, "Saving to: " + IMAGE_NAME, Toast.LENGTH_SHORT).show();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-
                         Mat warpOriginal = Utils.four_point_transform_scaled(saveOutMat, saveCols, saveRows, savePoints);
-                        Bitmap saveBitmap = Utils.matToBitmapRotate(warpOriginal);
+                        tempBitmap = Utils.matToBitmapRotate(warpOriginal);
                         warpOriginal.release();
-                        boolean success = FileUtils.saveBitmap(saveBitmap, SC.CURR_FOLDER, IMAGE_NAME);
+                        boolean success = FileUtils.saveBitmap(tempBitmap, SC.CURR_DIR, IMAGE_NAME);
+                        tempBitmap = Utils.matToBitmapRotate(saveOutMat);
+                        FileUtils.saveBitmap(tempBitmap, SC.CURR_ORIG_DIR, IMAGE_NAME);
                         Log.d("custom"+TAG, "Image Saved.");
                     }
                 }).start();
@@ -213,17 +226,17 @@ public class MainActivity extends AppCompatActivity implements IScanner, CameraB
             public void onStateChange(float process, State state, JellyToggleButton jtb) {
                 switch (state){
                     case LEFT:
-                    ((JavaCameraView)mOpenCvCameraView).turnOffTheFlash();
-                    break;
+                        ((JavaCameraView)mOpenCvCameraView).turnOffTheFlash();
+                        break;
                     case RIGHT:
-                    ((JavaCameraView)mOpenCvCameraView).turnOnTheFlash();
-                    break;
+                        ((JavaCameraView)mOpenCvCameraView).turnOnTheFlash();
+                        break;
                 }
             }
         });
 
 
-        Button storage_btn = findViewById(R.id.storage_btn);
+        storage_btn = findViewById(R.id.storage_btn);
         final int IMAGE_CTR = SC.IMAGE_CTR;
         storage_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,42 +245,47 @@ public class MainActivity extends AppCompatActivity implements IScanner, CameraB
                 v.setEnabled(false);
                 v.setClickable(false);
                 new LovelyTextInputDialog(MainActivity.this, R.style.TintTheme)
-                .setTopColorRes(R.color.dark_gray)
-                .setTitle(R.string.storage_folder)
-                .setIcon(R.drawable.ic_storage)
-                .setInitialInput(SC.INPUT_DIR+SC.IMAGE_PREFIX)
-                .setHint(getString(R.string.storage_hint,IMAGE_CTR))
-                .setInputFilter(R.string.storage_invalid, new LovelyTextInputDialog.TextFilter() {
-                    @Override
-                    public boolean check(String text) {
-                        return text.matches("[\\w\\d]+[/\\w\\d]*");
-                    }
-                })
-                .setConfirmButton(android.R.string.ok, new LovelyTextInputDialog.OnTextInputConfirmListener() {
-                    @Override
-                    public void onTextInputConfirmed(String text) {
-                        Log.d(TAG,"Received text: "+text);
-                        if(!text.endsWith("/"))
-                            text+="/";
-                        String [] splits = text.split("/");
-                        String tmp = "";
-                        SC.INPUT_DIR = splits[0]+"/";
-                        int ctr=0;
-                        for(String s : splits){
-                            tmp = tmp+s+"/";
-                            ctr++;
-                            if(ctr == splits.length-1){
-                                SC.INPUT_DIR = tmp;
+                        .setTopColorRes(R.color.dark_gray)
+                        .setTitle(R.string.storage_folder)
+                        .setIcon(R.drawable.ic_storage)
+                        .setInitialInput(SC.INPUT_DIR+SC.IMAGE_PREFIX)
+                        .setHint(getString(R.string.storage_hint,IMAGE_CTR))
+                        .setInputFilter(R.string.storage_invalid, new LovelyTextInputDialog.TextFilter() {
+                            @Override
+                            public boolean check(String text) {
+                                // TODO: update this filter
+                                return text.matches("[\\w\\d]+[/\\w\\d]*");
                             }
-                            if(ctr == splits.length){
-                                SC.IMAGE_PREFIX = s;
+                        })
+                        .setConfirmButton(android.R.string.ok, new LovelyTextInputDialog.OnTextInputConfirmListener() {
+                            @Override
+                            public void onTextInputConfirmed(String text) {
+                                Log.d(TAG,"Received text: "+text);
+                                if(!text.endsWith("/"))
+                                    text+="/";
+                                String [] splits = text.split("/");
+                                String tmp = "";
+                                SC.INPUT_DIR = splits[0]+"/";
+                                int ctr = 0;
+                                for(String s : splits){
+                                    tmp = tmp+s+"/";
+                                    ctr++;
+                                    if(ctr == splits.length-1){
+                                        SC.INPUT_DIR = tmp;
+                                        SC.INPUT_ORIG_DIR = "Original_"+SC.INPUT_DIR;
+                                    }
+                                    if(ctr == splits.length){
+                                        SC.IMAGE_PREFIX = s;
+                                    }
+                                }
+//                                TODO: everything should be inside STORAGE_TECHNO
+                                SC.CURR_DIR =  SC.STORAGE_HOME +"/" + SC.INPUT_DIR;
+                                SC.CURR_ORIG_DIR =  SC.STORAGE_HOME +"/" + SC.INPUT_ORIG_DIR;
+                                // checkmakeDirs will be called before saving.
+                                Toast.makeText(MainActivity.this, SC.INPUT_DIR+SC.IMAGE_PREFIX, Toast.LENGTH_SHORT).show();
                             }
-                        }
-                        SC.CURR_FOLDER =  SC.STORAGE_HOME +"/" + SC.INPUT_DIR;
-                        Toast.makeText(MainActivity.this, SC.INPUT_DIR+":"+SC.IMAGE_PREFIX, Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .show();
+                        })
+                        .show();
 
                 v.setEnabled(true);
                 v.setClickable(true);
@@ -281,14 +299,19 @@ public class MainActivity extends AppCompatActivity implements IScanner, CameraB
             }
         });
 
-//        TODO: check if this loader works fine
-        if (!OpenCVLoader.initDebug()) {
-            Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_4_0, this, mLoaderCallback);
-        } else {
-            Log.d(TAG, "OpenCV library found inside package. Using it!");
-            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
-        }
+        permHandler = new SimplePermissions(MainActivity.this, new String[]{
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.CAMERA
+        });
+//        TODO: check if this loader works fine -> They say static linking is better. Don't do both
+//        if (!OpenCVLoader.initDebug()) {
+//            Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
+//            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_4_0, this, mLoaderCallback);
+//        } else {
+//            Log.d(TAG, "OpenCV library found inside package. Using it!");
+//            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+//        }
+        permHandler.grantPermissions();
     }
 
     @Override
@@ -307,38 +330,23 @@ public class MainActivity extends AppCompatActivity implements IScanner, CameraB
 //        Log.i(TAG, "OpenCV loaded successfully");
         mOpenCvCameraView.enableView();
     }
-
-    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
-        @Override
-        public void onManagerConnected(int status) {
-            switch (status) {
-                case LoaderCallbackInterface.SUCCESS:
-                {
-                    Log.i(TAG, "OpenCV loaded successfully");
-                    initScanner();
-                } break;
-                default:
-                {
-                    super.onManagerConnected(status);
-                } break;
-            }
-        }
-    };
-
-    private void initScanner() {
-//                Bundle params = new Bundle();
-//                params.putString("image_name", "some name");
-//                params.putString("full_path", "File path with counter");
-//                mFirebaseAnalytics.logEvent("save_image", params);
-//                Crashlytics.getInstance().crash();
-//                return false;
-
-        permHandler = new SimplePermissions(this, new String[]{
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                android.Manifest.permission.CAMERA
-        });
-        permHandler.grantPermissions();
-    }
+//
+//    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+//        @Override
+//        public void onManagerConnected(int status) {
+//            switch (status) {
+//                case LoaderCallbackInterface.SUCCESS:
+//                {
+//                    Log.i(TAG, "OpenCV loaded successfully");
+//                    permHandler.grantPermissions();
+//                } break;
+//                default:
+//                {
+//                    super.onManagerConnected(status);
+//                } break;
+//            }
+//        }
+//    };
     //    callback from ActivityCompat.requestPermissions
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String PermissionsList[], @NonNull int[] grantResults) {
@@ -378,25 +386,26 @@ public class MainActivity extends AppCompatActivity implements IScanner, CameraB
     }
     private void onStorageGranted() {
         // create intermediate directories
-        // FileUtils.checkMakeDirs(SC.APPDATA_FOLDER);
-        FileUtils.checkMakeDirs(SC.STORAGE_FOLDER);
+        // FileUtils.checkMakeDirs(SC.APPDATA_DIR);
+        FileUtils.checkMakeDirs(SC.STORAGE_TECHNO);
         getOrMakeMarker();
+        storage_btn.performClick();
     }
     private void getOrMakeMarker() {
-        File mFile = new File(SC.STORAGE_FOLDER, SC.MARKER_NAME);
+        File mFile = new File(SC.STORAGE_TECHNO, SC.MARKER_NAME);
         if(! mFile.exists()){
             Bitmap bm = BitmapFactory.decodeResource( getResources(), R.drawable.default_omr_marker);
-            boolean success = FileUtils.saveBitmap(bm, SC.STORAGE_FOLDER, SC.MARKER_NAME);
+            boolean success = FileUtils.saveBitmap(bm, SC.STORAGE_TECHNO, SC.MARKER_NAME);
             if(success) {
                 Log.d("custom" + TAG, "Marker copied successfully to storage folder.");
-                Toast.makeText(this, "Marker created at: " + SC.STORAGE_FOLDER, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Marker created at: " + SC.STORAGE_TECHNO, Toast.LENGTH_SHORT).show();
             }
             else
                 Log.d("custom"+TAG,"Error copying Marker to storage folder.");
         }
         else{
-            Log.d("custom"+TAG,"Marker found in storage folder: "+SC.STORAGE_FOLDER);
-            Toast.makeText(this, "Marker Loaded from: "+SC.MARKER_DIR, Toast.LENGTH_SHORT).show();
+            Log.d("custom"+TAG,"Marker found in storage folder: "+SC.STORAGE_TECHNO);
+            Toast.makeText(MainActivity.this, "Marker Loaded from: "+SC.TECHNO_DIR, Toast.LENGTH_SHORT).show();
         }
 
         SC.markerToMatch = Utils.resize_util(Imgcodecs.imread(mFile.getAbsolutePath(), Imgcodecs.IMREAD_GRAYSCALE), (int) SC.uniform_width/SC.marker_scale_fac);
@@ -459,8 +468,8 @@ public class MainActivity extends AppCompatActivity implements IScanner, CameraB
 
         // THE MEMORY CONSUMING PART :
         // rotate the bitmap for portrait
-        copyBitmap = Utils.matToBitmapRotate(processedMat);
-        scanCanvasView.setCameraBitmap(copyBitmap);
+        tempBitmap = Utils.matToBitmapRotate(processedMat);
+        scanCanvasView.setCameraBitmap(tempBitmap);
         // set to render frame again
         invalidateCanvas();
         processedMat.release();
@@ -506,8 +515,8 @@ public class MainActivity extends AppCompatActivity implements IScanner, CameraB
                     captureHintText.setText(res.getString(R.string.finding_rect));
                     captureHintLayout.setBackground(res.getDrawable(R.drawable.hint_white));
                     break;
-                case HOLD_STILL:
-                    captureHintText.setText(res.getString(R.string.hold_still));
+                case FINDING_MARKERS:
+                    captureHintText.setText(res.getString(R.string.finding_markers));
                     captureHintLayout.setBackground(res.getDrawable(R.drawable.hint_green));
                     break;
                 case CAPTURING_IMAGE:
@@ -571,13 +580,15 @@ public class MainActivity extends AppCompatActivity implements IScanner, CameraB
                 Bitmap cameraBitmap = Utils.matToBitmapRotate(warpLevel1);
                 scanCanvasView.setHoverBitmap(cameraBitmap);
 
+                // need 4 points above threshold - GG with extensibility here
                 if(markerPts.size()==4 && Utils.getMaxCosine(markerPts) >= 0.30){
                     scanHint = ScanHint.CAPTURING_IMAGE;
                     // (low FPS target) creating a bitmap every frame is MEMORY HOGGING!
                     // run less times
                     if(acceptLayoutShowing) {
-                        if(saveOutMat != null)
-                            saveOutMat.release();
+//                        TODO: operations repeating here. add single operation condition to save some>
+//                        if(saveOutMat != null)
+//                            saveOutMat.release();
                         saveOutMat = outMat.clone();
                         saveCols = processedMat.cols();
                         saveRows = processedMat.rows();
@@ -586,7 +597,7 @@ public class MainActivity extends AppCompatActivity implements IScanner, CameraB
                     tryAutoCapture(scanHint);
                 }
                 else{
-                    scanHint = ScanHint.HOLD_STILL;
+                    scanHint = ScanHint.FINDING_MARKERS;
                 }
             }
         }
@@ -648,6 +659,8 @@ public class MainActivity extends AppCompatActivity implements IScanner, CameraB
                 Log.d(TAG,"autoCapture action.");
                 isCapturing = true;
                 displayHint(ScanHint.CAPTURING_IMAGE);
+//                Do a capture animation:
+                //        There's option to enable Shutter Sound as well
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
                     TransitionManager.beginDelayedTransition(containerScan);
                 cropAcceptBtn.performClick();
@@ -747,9 +760,12 @@ public class MainActivity extends AppCompatActivity implements IScanner, CameraB
     public void onCameraViewStarted(int width, int height) {
         Log.d(TAG, "onCameraViewStarted ");
 
-        Size f = ((JavaCameraView)mOpenCvCameraView).frameSize;
-        Toast.makeText(MainActivity.this, "Camera frame size: " + (int)f.width + "x" + (int)f.height, Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "Resolution Used: " + f.width + "x" + f.height);
+        Size frameSize = ((JavaCameraView)mOpenCvCameraView).frameSize;
+//        analytics data- (more in JavaCameraView)
+//        frameSize
+//        android.os.Build.MODEL
+        Toast.makeText(MainActivity.this, "Camera frame size: " + (int)frameSize.width + "x" + (int)frameSize .height, Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "Resolution Used: " + frameSize.width + "x" + frameSize.height);
     }
     public void onCameraViewStopped() {
         Log.d(TAG, "onCameraViewStopped ");

@@ -436,6 +436,172 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@string/trunc_thresh"
+                        style="@style/TextShadow"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:textColor="@color/yellow"
+                        android:textSize="@dimen/text_size_18" />
+                    <com.mohammedalaa.seekbar.RangeSeekBarView
+                        android:id="@+id/trunc_thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:barHeight="@dimen/value_bar_barHeight"
+                        app:baseColor="@color/navy"
+                        app:circleRadius="@dimen/value_bar_circleRadius"
+                        app:circleTextColor="@color/black"
+                        app:circleTextSize="@dimen/value_bar_circleTextSize"
+                        app:fillColor="@color/white"
+                        app:currentValue="@string/v_trunc_thresh"
+                        app:minValue="50"
+                        app:maxValue="255"
+                        app:stepValue="5"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:paddingTop="12dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/zero_thresh"
+                        style="@style/TextShadow"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:textColor="@color/yellow"
+                        android:textSize="@dimen/text_size_18" />
+                    <com.mohammedalaa.seekbar.RangeSeekBarView
+                        android:id="@+id/zero_thresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:barHeight="@dimen/value_bar_barHeight"
+                        app:baseColor="@color/navy"
+                        app:circleRadius="@dimen/value_bar_circleRadius"
+                        app:circleTextColor="@color/black"
+                        app:circleTextSize="@dimen/value_bar_circleTextSize"
+                        app:fillColor="@color/white"
+                        app:currentValue="@string/v_zero_thresh"
+                        app:minValue="0"
+                        app:maxValue="255"
+                        app:stepValue="5"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:paddingTop="12dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/autocap_timer"
+                        style="@style/TextShadow"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:textColor="@color/yellow"
+                        android:textSize="@dimen/text_size_18" />
+                    <com.mohammedalaa.seekbar.RangeSeekBarView
+                        android:id="@+id/autocap_timer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:barHeight="@dimen/value_bar_barHeight"
+                        app:baseColor="@color/navy"
+                        app:circleRadius="@dimen/value_bar_circleRadius"
+                        app:circleTextColor="@color/black"
+                        app:circleTextSize="@dimen/value_bar_circleTextSize"
+                        app:fillColor="@color/white"
+                        app:currentValue="@string/v_autocap_timer"
+                        app:minValue="2"
+                        app:maxValue="10"
+                        app:stepValue="1"
+                        />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:paddingTop="12dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/marker_scale"
+                        style="@style/TextShadow"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:textColor="@color/yellow"
+                        android:textSize="@dimen/text_size_18" />
+                    <com.mohammedalaa.seekbar.RangeSeekBarView
+                        android:id="@+id/marker_scale"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:barHeight="@dimen/value_bar_barHeight"
+                        app:baseColor="@color/navy"
+                        app:circleRadius="@dimen/value_bar_circleRadius"
+                        app:circleTextColor="@color/black"
+                        app:circleTextSize="@dimen/value_bar_circleTextSize"
+                        app:fillColor="@color/white"
+                        app:currentValue="@string/v_marker_scale"
+                        app:minValue="50"
+                        app:maxValue="200"
+                        app:stepValue="10"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:paddingTop="12dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/match_percent"
+                        style="@style/TextShadow"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:textColor="@color/yellow"
+                        android:textSize="@dimen/text_size_18" />
+                    <com.mohammedalaa.seekbar.RangeSeekBarView
+                        android:id="@+id/match_percent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:barHeight="@dimen/value_bar_barHeight"
+                        app:baseColor="@color/navy"
+                        app:circleRadius="@dimen/value_bar_circleRadius"
+                        app:circleTextColor="@color/black"
+                        app:circleTextSize="@dimen/value_bar_circleTextSize"
+                        app:fillColor="@color/white"
+                        app:currentValue="@string/v_match_percent"
+                        app:minValue="30"
+                        app:maxValue="90"
+                        app:stepValue="5"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:paddingTop="12dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="@string/ksize_blur"
                         style="@style/TextShadow"
                         android:layout_gravity="center_horizontal"
@@ -588,137 +754,6 @@
                         app:minValue="100"
                         app:maxValue="300"
                         app:stepValue="10"
-                        />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:paddingTop="12dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/marker_scale"
-                        style="@style/TextShadow"
-                        android:layout_gravity="center_horizontal"
-                        android:gravity="center"
-                        android:paddingBottom="4dp"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:textColor="@color/yellow"
-                        android:textSize="@dimen/text_size_18" />
-                    <com.mohammedalaa.seekbar.RangeSeekBarView
-                        android:id="@+id/marker_scale"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:barHeight="@dimen/value_bar_barHeight"
-                        app:baseColor="@color/navy"
-                        app:circleRadius="@dimen/value_bar_circleRadius"
-                        app:circleTextColor="@color/black"
-                        app:circleTextSize="@dimen/value_bar_circleTextSize"
-                        app:fillColor="@color/white"
-                        app:currentValue="@string/v_marker_scale"
-                        app:minValue="50"
-                        app:maxValue="200"
-                        app:stepValue="10"
-                        />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:paddingTop="12dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/trunc_thresh"
-                        style="@style/TextShadow"
-                        android:layout_gravity="center_horizontal"
-                        android:gravity="center"
-                        android:paddingBottom="4dp"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:textColor="@color/yellow"
-                        android:textSize="@dimen/text_size_18" />
-                    <com.mohammedalaa.seekbar.RangeSeekBarView
-                        android:id="@+id/trunc_thresh"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:barHeight="@dimen/value_bar_barHeight"
-                        app:baseColor="@color/navy"
-                        app:circleRadius="@dimen/value_bar_circleRadius"
-                        app:circleTextColor="@color/black"
-                        app:circleTextSize="@dimen/value_bar_circleTextSize"
-                        app:fillColor="@color/white"
-                        app:currentValue="@string/v_trunc_thresh"
-                        app:minValue="50"
-                        app:maxValue="255"
-                        app:stepValue="5"
-                        />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:paddingTop="12dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/zero_thresh"
-                        style="@style/TextShadow"
-                        android:layout_gravity="center_horizontal"
-                        android:gravity="center"
-                        android:paddingBottom="4dp"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:textColor="@color/yellow"
-                        android:textSize="@dimen/text_size_18" />
-                    <com.mohammedalaa.seekbar.RangeSeekBarView
-                        android:id="@+id/zero_thresh"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:barHeight="@dimen/value_bar_barHeight"
-                        app:baseColor="@color/navy"
-                        app:circleRadius="@dimen/value_bar_circleRadius"
-                        app:circleTextColor="@color/black"
-                        app:circleTextSize="@dimen/value_bar_circleTextSize"
-                        app:fillColor="@color/white"
-                        app:currentValue="@string/v_zero_thresh"
-                        app:minValue="0"
-                        app:maxValue="255"
-                        app:stepValue="5"
-                        />
-                </LinearLayout>
-                <LinearLayout
-                    android:paddingTop="12dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/autocap_timer"
-                        style="@style/TextShadow"
-                        android:layout_gravity="center_horizontal"
-                        android:gravity="center"
-                        android:paddingBottom="4dp"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:textColor="@color/yellow"
-                        android:textSize="@dimen/text_size_18" />
-                    <com.mohammedalaa.seekbar.RangeSeekBarView
-                        android:id="@+id/autocap_timer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:barHeight="@dimen/value_bar_barHeight"
-                        app:baseColor="@color/navy"
-                        app:circleRadius="@dimen/value_bar_circleRadius"
-                        app:circleTextColor="@color/black"
-                        app:circleTextSize="@dimen/value_bar_circleTextSize"
-                        app:fillColor="@color/white"
-                        app:currentValue="@string/v_autocap_timer"
-                        app:minValue="2"
-                        app:maxValue="10"
-                        app:stepValue="1"
                         />
                 </LinearLayout>
                 <Button

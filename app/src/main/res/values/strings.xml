@@ -5,12 +5,12 @@
     <!--<string name="finding_rect">I can\'t see a sheet</string>-->
     <string name="finding_rect">Mujhe Sheet Dikhao!</string>
     <string name="place_sheet">Point to a sheet</string>
-    <string name="move_away">Move away</string>
-    <string name="move_closer">Move closer</string>
-    <string name="adjust_angle">Adjust angle</string>
+    <string name="move_away">Door se khicho thoda</string>
+    <string name="move_closer">Paas se khicho thoda</string>
+    <string name="adjust_angle">Angle adjust karo(Xray)</string>
     <string name="error_rect">Something is wrong.</string>
-    <string name="hold_still">Hold still</string>
-    <string name="find_marker">Looking for markers</string>
+    <!--<string name="hold_still">Hold still</string>-->
+    <string name="finding_markers">Markers nahi mil rahe</string>
     <string name="capturing">Oye Balle Balle!</string>
     <!--<string name="capturing">Capturing Image</string>-->
     <string name="timer_text">(%1$d s)</string>
@@ -27,7 +27,7 @@
     <string name="gamma_on">Gamma</string>
     <string name="normal">Off</string>
     <string name="storage_btn">Storage</string>
-    <string name="storage_folder">Storage Path Prefix</string>
+    <string name="storage_folder">File Pattern</string>
     <string name="storage_hint">Suffix \'_%1$d.jpg\' will be added automatically</string>
     <string name="storage_invalid">Invalid Path!</string>
 
@@ -38,6 +38,7 @@
     <string name="v_canny_u">150</string>
     <string name="v_gamma">125</string>
     <string name="v_marker_scale">100</string>
+    <string name="v_match_percent">40</string>
     <string name="v_trunc_thresh">235</string>
     <!-- Most useful: zero thresh-->
     <string name="v_zero_thresh">190</string>
@@ -47,6 +48,7 @@
     <string name="autocap_timer">Timer</string>
     <string name="gamma">Gamma</string>
     <string name="marker_scale">MScale</string>
+    <string name="match_percent">MPercent</string>
     <string name="trunc_thresh">Truncate</string>
     <string name="ksize_blur">BlurK</string>
     <string name="ksize_morph">MorphK</string>

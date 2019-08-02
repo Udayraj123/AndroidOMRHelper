@@ -14,3 +14,7 @@ Credits to [adityaarora1](https://github.com/adityaarora1) for their [liveedgede
 [![GitHub issues-closed](https://img.shields.io/github/issues-closed/udayraj123/AndroidOMRHelper.svg)](https://GitHub.com/udayraj123/AndroidOMRHelper/issues?q=is%3Aissue+is%3Aclosed)
 
 <!-- Make notes of the Changes done in JavaCameraView of opencv -->
+
+<!-- ### Troubleshooting
+Unsatisfied Link error-
+Degrading Opencv to 3.1.0 worked. Now trying latest 4.1.0 -->

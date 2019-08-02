@@ -10,6 +10,6 @@ public enum ScanHint {
     ERROR_RECT,
     ADJUST_ANGLE,
     CAPTURING_IMAGE,
-    HOLD_STILL,
+    FINDING_MARKERS,
     NO_MESSAGE
 }
